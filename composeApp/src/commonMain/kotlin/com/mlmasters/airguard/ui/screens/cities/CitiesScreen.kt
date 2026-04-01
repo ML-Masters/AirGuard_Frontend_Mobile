@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,13 +47,13 @@ fun CitiesScreen(
                         Column {
                             Text("Villes", fontWeight = FontWeight.Bold, fontSize = 22.sp)
                             Text(
-                                "${state.villes.size} villes surveillées",
+                                "${state.villes.size} villes surveill\u00e9es",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp,
                             )
                         }
-                        TextButton(onClick = { viewModel.loadData() }) {
-                            Text("↻", fontSize = 16.sp)
+                        IconButton(onClick = { viewModel.loadData() }) {
+                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(20.dp))
                         }
                     }
                     Spacer(Modifier.height(12.dp))
@@ -81,7 +83,7 @@ fun CitiesScreen(
                         ) {
                             if (aq != null) {
                                 val info = airQualityInfo(aq.categorie)
-                                Text(info.emoji, fontSize = 28.sp)
+                                Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(28.dp))
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 15.sp)

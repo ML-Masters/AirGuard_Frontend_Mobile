@@ -11,11 +11,12 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-fun App(onGoogleSignIn: (onToken: (String) -> Unit) -> Unit = { }) {
+fun App(onGoogleSignIn: (onToken: (String) -> Unit, onError: (String) -> Unit) -> Unit = { _, _ -> }) {
     val repository: AirGuardRepository = koinInject()
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
     var showRegister by remember { mutableStateOf(false) }
     var showOnboarding by remember { mutableStateOf(false) }
+    var googleError by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
@@ -23,14 +24,22 @@ fun App(onGoogleSignIn: (onToken: (String) -> Unit) -> Unit = { }) {
     }
 
     val googleSignInHandler: () -> Unit = {
-        onGoogleSignIn { idToken ->
-            scope.launch {
-                val result = repository.loginWithGoogle(idToken)
-                if (result.isSuccess) {
-                    showOnboarding = true
+        googleError = null
+        onGoogleSignIn(
+            { idToken ->
+                scope.launch {
+                    val result = repository.loginWithGoogle(idToken)
+                    if (result.isSuccess) {
+                        showOnboarding = true
+                    } else {
+                        googleError = result.exceptionOrNull()?.message ?: "Erreur de connexion Google"
+                    }
                 }
+            },
+            { error ->
+                googleError = error
             }
-        }
+        )
     }
 
     AirGuardTheme {
@@ -57,6 +66,7 @@ fun App(onGoogleSignIn: (onToken: (String) -> Unit) -> Unit = { }) {
                 onLoginSuccess = { isLoggedIn = true },
                 onGoogleSignIn = googleSignInHandler,
                 onNavigateToRegister = { showRegister = true },
+                googleError = googleError,
             )
         }
     }

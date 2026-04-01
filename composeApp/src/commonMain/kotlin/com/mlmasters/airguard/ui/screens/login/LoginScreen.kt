@@ -7,6 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,12 +30,14 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onGoogleSignIn: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
+    googleError: String? = null,
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+    val displayError = state.error ?: googleError
 
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) onLoginSuccess()
@@ -59,14 +64,14 @@ fun LoginScreen(
         Spacer(Modifier.height(40.dp))
 
         // Error
-        if (state.error != null) {
+        if (displayError != null) {
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFFEF2F2)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = state.error ?: "",
+                    text = displayError,
                     color = Color(0xFFDC2626),
                     fontSize = 13.sp,
                     modifier = Modifier.padding(12.dp),
@@ -97,7 +102,10 @@ fun LoginScreen(
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(onClick = { showPassword = !showPassword }) {
-                    Text(if (showPassword) "\uD83D\uDE48" else "\uD83D\uDC41", fontSize = 18.sp)
+                    Icon(
+                        if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = null,
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth(),

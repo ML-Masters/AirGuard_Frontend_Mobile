@@ -91,14 +91,16 @@ class ApiClient(private val tokenStorage: TokenStorage) {
     // --- Villes ---
 
     suspend fun getVilles(): Result<List<Ville>> = authRequest {
-        client.get("$BASE_URL/villes/") { withAuth() }.body()
+        val response: PaginatedResponse<Ville> = client.get("$BASE_URL/villes/") { withAuth() }.body()
+        response.results
     }
 
     // --- Air Quality ---
 
     suspend fun getAirQuality(params: String = ""): Result<List<AirQuality>> = authRequest {
         val url = if (params.isNotEmpty()) "$BASE_URL/air-quality/?$params" else "$BASE_URL/air-quality/"
-        client.get(url) { withAuth() }.body()
+        val response: PaginatedResponse<AirQuality> = client.get(url) { withAuth() }.body()
+        response.results
     }
 
     suspend fun getNationalKPIs(): Result<NationalKPIs> = authRequest {

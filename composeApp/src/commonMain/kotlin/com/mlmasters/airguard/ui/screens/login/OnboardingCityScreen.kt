@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,7 +58,12 @@ fun OnboardingCityScreen(onComplete: () -> Unit) {
     ) {
         Spacer(Modifier.height(48.dp))
 
-        Text("📍", fontSize = 48.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
+        Icon(
+            Icons.Default.LocationOn,
+            contentDescription = null,
+            tint = Primary,
+            modifier = Modifier.size(48.dp).align(Alignment.CenterHorizontally),
+        )
         Spacer(Modifier.height(12.dp))
         Text(
             "Où habitez-vous ?",

@@ -10,6 +10,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -129,7 +133,10 @@ fun RegisterScreen(
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(onClick = { showPassword = !showPassword }) {
-                    Text(if (showPassword) "\uD83D\uDE48" else "\uD83D\uDC41", fontSize = 18.sp)
+                    Icon(
+                        if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = null,
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -143,7 +150,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth().height(52.dp),
             border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
         ) {
-            Text("📍", fontSize = 16.sp)
+            Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(
                 selectedVilleName ?: "Votre ville de résidence",

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,8 +46,8 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
                                 fontSize = 14.sp,
                             )
                         }
-                        TextButton(onClick = { viewModel.loadAlerts() }) {
-                            Text("↻", fontSize = 16.sp)
+                        IconButton(onClick = { viewModel.loadAlerts() }) {
+                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(20.dp))
                         }
                     }
                     Spacer(Modifier.height(4.dp))

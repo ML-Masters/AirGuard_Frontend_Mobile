@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +33,10 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .imePadding(),
     ) {
         // Header
         Surface(
@@ -102,13 +107,16 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
             }
         }
 
-        // Input
+        // Input - stays above keyboard
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp,
         ) {
             Row(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 OutlinedTextField(
@@ -130,7 +138,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                     colors = ButtonDefaults.buttonColors(containerColor = Primary),
                     contentPadding = PaddingValues(14.dp),
                 ) {
-                    Text("\u27A4", fontSize = 18.sp)
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, modifier = Modifier.size(20.dp))
                 }
             }
         }

@@ -5,6 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,18 +27,18 @@ import com.mlmasters.airguard.ui.theme.*
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(onLogout: () -> Unit = {}, viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
 
     when {
         state.isLoading -> LoadingState()
         state.error != null -> ErrorState(state.error ?: "", onRetry = { viewModel.loadData() })
-        else -> HomeContent(state, viewModel, onLogout)
+        else -> HomeContent(state, viewModel)
     }
 }
 
 @Composable
-private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: () -> Unit) {
+private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
     val villeMap = remember(state.villes) { state.villes.associateBy { it.id } }
     val latestByCity = remember(state.airQuality) {
         val map = mutableMapOf<Int, AirQuality>()
@@ -59,15 +64,15 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
-                    Text("Bonjour \uD83D\uDC4B", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                    Text("Bonjour", fontWeight = FontWeight.Bold, fontSize = 24.sp)
                     Text(
                         "Comment est l'air aujourd'hui ?",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                     )
                 }
-                TextButton(onClick = { viewModel.loadData() }) {
-                    Text("\u21BB", fontSize = 18.sp)
+                IconButton(onClick = { viewModel.loadData() }) {
+                    Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(20.dp))
                 }
             }
         }
@@ -92,7 +97,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
                     modifier = Modifier.fillMaxWidth().padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(avgInfo.emoji, fontSize = 48.sp)
+                    Icon(avgInfo.icon, contentDescription = null, tint = avgInfo.color, modifier = Modifier.size(56.dp))
                     Spacer(Modifier.height(8.dp))
                     Text(
                         avgInfo.label,
@@ -139,7 +144,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
                     title = "Air dangereux",
                     value = "${state.criticalCities}",
                     accentColor = AqiMalsain,
-                    icon = { Text("\u26A0\uFE0F", fontSize = 20.sp) },
+                    icon = { Icon(Icons.Default.Warning, null, tint = AqiMalsain, modifier = Modifier.size(20.dp)) },
                     subtitle = "ville${if (state.criticalCities != 1) "s" else ""} \u00e0 risque",
                     modifier = Modifier.weight(1f),
                 )
@@ -147,7 +152,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
                     title = "Alertes",
                     value = "${state.alerts.size}",
                     accentColor = Color(0xFFF59E0B),
-                    icon = { Text("\uD83D\uDD14", fontSize = 20.sp) },
+                    icon = { Icon(Icons.Default.Notifications, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(20.dp)) },
                     subtitle = "en cours",
                     modifier = Modifier.weight(1f),
                 )
@@ -157,11 +162,17 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
         // Active alerts
         if (state.alerts.isNotEmpty()) {
             item {
-                Text(
-                    "\u26A0\uFE0F Alertes en cours",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = AqiMalsain, modifier = Modifier.size(18.dp))
+                    Text(
+                        "Alertes en cours",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                    )
+                }
             }
             items(state.alerts.take(3)) { alert ->
                 Card(
@@ -188,11 +199,17 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
 
         // Cities air quality
         item {
-            Text(
-                "\uD83C\uDFD9 Qualit\u00e9 de l'air par ville",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(Icons.Default.Place, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
+                Text(
+                    "Qualit\u00e9 de l'air par ville",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                )
+            }
         }
         val sortedCities = latestByCity.entries
             .sortedByDescending { it.value.indiceAqi }
@@ -201,14 +218,6 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: ()
         items(sortedCities.toList()) { (villeId, aq) ->
             val ville = villeMap[villeId] ?: return@items
             CitizenVilleRow(ville, aq)
-        }
-
-        // Logout
-        item {
-            Spacer(Modifier.height(8.dp))
-            TextButton(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
-                Text("D\u00e9connexion", color = MaterialTheme.colorScheme.error, fontSize = 14.sp)
-            }
         }
     }
 }
@@ -224,7 +233,7 @@ private fun CitizenVilleRow(ville: Ville, aq: AirQuality) {
             modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(info.emoji, fontSize = 28.sp)
+            Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(28.dp))
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 14.sp)

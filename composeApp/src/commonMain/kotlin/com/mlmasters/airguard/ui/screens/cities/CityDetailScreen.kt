@@ -5,12 +5,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +42,7 @@ fun CityDetailScreen(
                 title = { Text(villeNom) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Text("←", fontSize = 20.sp)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
             )
@@ -66,7 +72,7 @@ fun CityDetailScreen(
                                 modifier = Modifier.fillMaxWidth().padding(20.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Text(info.emoji, fontSize = 56.sp)
+                                Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(56.dp))
                                 Spacer(Modifier.height(8.dp))
                                 Text(info.label, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = info.color)
                                 Text(info.description, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
@@ -76,7 +82,7 @@ fun CityDetailScreen(
                                     colors = CardDefaults.cardColors(containerColor = Color.White),
                                 ) {
                                     Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Text("\uD83D\uDCA1", fontSize = 16.sp)
+                                        Icon(Icons.Default.Info, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
                                         Spacer(Modifier.width(8.dp))
                                         Text(info.conseil, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface)
                                     }
@@ -98,8 +104,8 @@ fun CityDetailScreen(
 
                         // Air quality prediction
                         PredictionCard(
-                            title = "\uD83C\uDF2C Pr\u00e9vision air",
-                            emoji = "",
+                            title = "Pr\u00e9vision air",
+                            icon = Icons.Default.FavoriteBorder,
                             color = aqiColor(pred.qualiteAir.categorie),
                             items = listOf(
                                 "Pollution pr\u00e9vue" to "${pred.qualiteAir.pm25} \u00b5g/m\u00b3",
@@ -110,8 +116,8 @@ fun CityDetailScreen(
 
                         // Heat prediction
                         PredictionCard(
-                            title = "\uD83C\uDF21 Temp\u00e9rature ressentie",
-                            emoji = "",
+                            title = "Temp\u00e9rature ressentie",
+                            icon = Icons.Default.Warning,
                             color = if (pred.chaleurSante.avertissement == "Danger") AqiMalsain else Primary,
                             items = listOf(
                                 "Ressenti" to "${pred.chaleurSante.heatIndex}\u00b0C",
@@ -122,8 +128,8 @@ fun CityDetailScreen(
 
                         // Flood risk prediction
                         PredictionCard(
-                            title = "\uD83C\uDF0A Risques m\u00e9t\u00e9o",
-                            emoji = "",
+                            title = "Risques m\u00e9t\u00e9o",
+                            icon = Icons.Default.Info,
                             color = if (pred.risquesNaturels.risqueInondation > 6) AqiMalsain else Primary,
                             items = listOf(
                                 "S\u00e9cheresse" to "${pred.risquesNaturels.stressHydrique}",
@@ -141,7 +147,7 @@ fun CityDetailScreen(
 @Composable
 private fun PredictionCard(
     title: String,
-    emoji: String,
+    icon: ImageVector,
     color: Color,
     items: List<Pair<String, String>>,
 ) {
@@ -151,10 +157,8 @@ private fun PredictionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (emoji.isNotEmpty()) {
-                    Text(emoji, fontSize = 20.sp)
-                    Spacer(Modifier.width(8.dp))
-                }
+                Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(8.dp))
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
             }
             Spacer(Modifier.height(12.dp))
