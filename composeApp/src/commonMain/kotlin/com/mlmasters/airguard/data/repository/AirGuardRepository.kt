@@ -1,0 +1,44 @@
+package com.mlmasters.airguard.data.repository
+
+import com.mlmasters.airguard.data.model.*
+import com.mlmasters.airguard.data.remote.ApiClient
+import com.mlmasters.airguard.data.remote.TokenStorage
+
+class AirGuardRepository(
+    private val api: ApiClient,
+    private val tokenStorage: TokenStorage,
+) {
+    suspend fun isLoggedIn(): Boolean = tokenStorage.isLoggedIn()
+
+    suspend fun login(email: String, password: String): Result<AuthTokens> =
+        api.login(email, password)
+
+    suspend fun register(
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        langue: String,
+        villesFavorites: List<Int>,
+    ): Result<AuthTokens> = api.register(
+        RegisterRequest(email, password, firstName, lastName, langue, villesFavorites)
+    )
+
+    suspend fun loginWithGoogle(idToken: String): Result<AuthTokens> =
+        api.loginWithGoogle(idToken)
+
+    suspend fun logout() = api.logout()
+
+    suspend fun getVilles(): Result<List<Ville>> = api.getVilles()
+
+    suspend fun getAirQuality(estPrediction: Boolean = false): Result<List<AirQuality>> =
+        api.getAirQuality("est_prediction=$estPrediction")
+
+    suspend fun getNationalKPIs(): Result<NationalKPIs> = api.getNationalKPIs()
+
+    suspend fun getActiveAlerts(): Result<List<Alert>> = api.getActiveAlerts()
+
+    suspend fun predict(villeNom: String): Result<PredictionResult> = api.predict(villeNom)
+
+    suspend fun chat(message: String): Result<ChatResponse> = api.chat(message)
+}

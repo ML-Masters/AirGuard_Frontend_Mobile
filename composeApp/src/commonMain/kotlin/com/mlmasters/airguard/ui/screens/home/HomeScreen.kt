@@ -1,0 +1,245 @@
+package com.mlmasters.airguard.ui.screens.home
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.data.model.AirQuality
+import com.mlmasters.airguard.data.model.Ville
+import com.mlmasters.airguard.ui.components.*
+import com.mlmasters.airguard.ui.theme.*
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun HomeScreen(onLogout: () -> Unit = {}, viewModel: HomeViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsState()
+
+    when {
+        state.isLoading -> LoadingState()
+        state.error != null -> ErrorState(state.error ?: "", onRetry = { viewModel.loadData() })
+        else -> HomeContent(state, viewModel, onLogout)
+    }
+}
+
+@Composable
+private fun HomeContent(state: HomeState, viewModel: HomeViewModel, onLogout: () -> Unit) {
+    val villeMap = remember(state.villes) { state.villes.associateBy { it.id } }
+    val latestByCity = remember(state.airQuality) {
+        val map = mutableMapOf<Int, AirQuality>()
+        for (aq in state.airQuality) {
+            val existing = map[aq.ville]
+            if (existing == null || aq.dateCible > existing.dateCible) {
+                map[aq.ville] = aq
+            }
+        }
+        map
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        // Header
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column {
+                    Text("Bonjour \uD83D\uDC4B", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                    Text(
+                        "Comment est l'air aujourd'hui ?",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                    )
+                }
+                TextButton(onClick = { viewModel.loadData() }) {
+                    Text("\u21BB", fontSize = 18.sp)
+                }
+            }
+        }
+
+        // National summary card
+        item {
+            val avgInfo = airQualityInfo(
+                when {
+                    state.avgAqi <= 50 -> "Bon"
+                    state.avgAqi <= 100 -> "Modere"
+                    state.avgAqi <= 150 -> "Sensible"
+                    state.avgAqi <= 200 -> "Malsain"
+                    state.avgAqi <= 300 -> "Tres_malsain"
+                    else -> "Dangereux"
+                }
+            )
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = avgInfo.color.copy(alpha = 0.08f)),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(avgInfo.emoji, fontSize = 48.sp)
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        avgInfo.label,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = avgInfo.color,
+                    )
+                    Text(
+                        avgInfo.description,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                    ) {
+                        Text(
+                            avgInfo.conseil,
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(12.dp),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Indice national moyen : ${state.avgAqi} \u00b7 ${state.villes.size} villes",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+
+        // Quick stats
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                KPICard(
+                    title = "Air dangereux",
+                    value = "${state.criticalCities}",
+                    accentColor = AqiMalsain,
+                    icon = { Text("\u26A0\uFE0F", fontSize = 20.sp) },
+                    subtitle = "ville${if (state.criticalCities != 1) "s" else ""} \u00e0 risque",
+                    modifier = Modifier.weight(1f),
+                )
+                KPICard(
+                    title = "Alertes",
+                    value = "${state.alerts.size}",
+                    accentColor = Color(0xFFF59E0B),
+                    icon = { Text("\uD83D\uDD14", fontSize = 20.sp) },
+                    subtitle = "en cours",
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+
+        // Active alerts
+        if (state.alerts.isNotEmpty()) {
+            item {
+                Text(
+                    "\u26A0\uFE0F Alertes en cours",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                )
+            }
+            items(state.alerts.take(3)) { alert ->
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                ) {
+                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(alert.villeNom, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                                SeverityBadge(alert.niveauSeverite)
+                            }
+                            Text(
+                                alert.messageFr.take(120),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp,
+                                maxLines = 2,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Cities air quality
+        item {
+            Text(
+                "\uD83C\uDFD9 Qualit\u00e9 de l'air par ville",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+            )
+        }
+        val sortedCities = latestByCity.entries
+            .sortedByDescending { it.value.indiceAqi }
+            .take(15)
+
+        items(sortedCities.toList()) { (villeId, aq) ->
+            val ville = villeMap[villeId] ?: return@items
+            CitizenVilleRow(ville, aq)
+        }
+
+        // Logout
+        item {
+            Spacer(Modifier.height(8.dp))
+            TextButton(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
+                Text("D\u00e9connexion", color = MaterialTheme.colorScheme.error, fontSize = 14.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CitizenVilleRow(ville: Ville, aq: AirQuality) {
+    val info = airQualityInfo(aq.categorie)
+    Card(
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(info.emoji, fontSize = 28.sp)
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                Text(
+                    info.label,
+                    color = info.color,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            Text(
+                "${aq.indiceAqi}",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 11.sp,
+            )
+        }
+    }
+}

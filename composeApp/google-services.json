@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "81645766104",
+    "project_id": "airguard-8aa4b",
+    "storage_bucket": "airguard-8aa4b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81645766104:android:6a79fc53df8cdabd2e5ead",
+        "android_client_info": {
+          "package_name": "com.mlmasters.airguard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81645766104-57a6u93o849dbqd7m1ucu3hsh07gufo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mlmasters.airguard",
+            "certificate_hash": "17f4da1f80f6fdade3fbd731f9e8f291c3d01854"
+          }
+        },
+        {
+          "client_id": "81645766104-8t7j388319kr8mdrmscdk5kur2favv02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mlmasters.airguard",
+            "certificate_hash": "13f36403285063a21fdbbad77a8a23b53fed6515"
+          }
+        },
+        {
+          "client_id": "81645766104-9tp9o0q30t2s948jv89kpitdc0r1jobs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLiFF3IRHz7jXfW0lTvmh7Xqqy_iNUw00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81645766104-9tp9o0q30t2s948jv89kpitdc0r1jobs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
