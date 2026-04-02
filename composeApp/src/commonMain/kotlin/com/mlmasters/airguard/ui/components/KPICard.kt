@@ -43,7 +43,7 @@ fun KPICard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color(0xFF64748B),
             )
         }
         Spacer(Modifier.height(12.dp))
@@ -51,13 +51,13 @@ fun KPICard(
             text = value,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = Color(0xFF1E293B),
         )
         if (subtitle != null) {
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color(0xFF64748B),
             )
         }
     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.data.model.WeekPrediction
 import com.mlmasters.airguard.ui.components.*
 import com.mlmasters.airguard.ui.components.airQualityInfo
 import com.mlmasters.airguard.ui.theme.*
@@ -84,7 +85,7 @@ fun CityDetailScreen(
                                     Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                                         Icon(Icons.Default.Info, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
                                         Spacer(Modifier.width(8.dp))
-                                        Text(info.conseil, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface)
+                                        Text(info.conseil, fontSize = 13.sp, color = Color(0xFF1E293B))
                                     }
                                 }
                                 Spacer(Modifier.height(8.dp))
@@ -138,6 +139,43 @@ fun CityDetailScreen(
                             ),
                         )
                     }
+
+                    // Week predictions
+                    val weekPred = state.weekPrediction
+                    if (weekPred != null && weekPred.jours.isNotEmpty()) {
+                        Text("Prévisions de la semaine", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1E293B))
+                        Text(weekPred.resume, fontSize = 13.sp, color = Color(0xFF64748B))
+                        Spacer(Modifier.height(4.dp))
+
+                        weekPred.jours.forEach { jour ->
+                            val jourInfo = airQualityInfo(jour.categorie)
+                            Card(
+                                shape = RoundedCornerShape(14.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color.White),
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(14.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    // Color bar
+                                    Box(
+                                        modifier = Modifier
+                                            .width(4.dp)
+                                            .height(40.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .background(jourInfo.color)
+                                    )
+                                    Spacer(Modifier.width(12.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(jour.jour, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Color(0xFF1E293B))
+                                        Text(jour.label, fontSize = 12.sp, color = jourInfo.color, fontWeight = FontWeight.Medium)
+                                    }
+                                    Text(jour.date, fontSize = 11.sp, color = Color(0xFF64748B))
+                                }
+                            }
+                            Spacer(Modifier.height(4.dp))
+                        }
+                    }
                 }
             }
         }
@@ -159,7 +197,7 @@ private fun PredictionCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, color = Color(0xFF1E293B))
             }
             Spacer(Modifier.height(12.dp))
             items.forEach { (label, value) ->
@@ -167,7 +205,7 @@ private fun PredictionCard(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                    Text(label, color = Color(0xFF64748B), fontSize = 13.sp)
                     Text(value, fontWeight = FontWeight.Medium, fontSize = 13.sp, color = color)
                 }
             }

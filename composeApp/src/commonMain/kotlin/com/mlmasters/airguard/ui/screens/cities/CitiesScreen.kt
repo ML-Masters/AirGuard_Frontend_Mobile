@@ -86,24 +86,24 @@ fun CitiesScreen(
                                 Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(28.dp))
                                 Spacer(Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                                    Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 15.sp, color = Color(0xFF1E293B))
                                     Text(
                                         info.label,
                                         color = info.color,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
                                     )
-                                    Text(ville.regionNom, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                                    Text(ville.regionNom, color = Color(0xFF64748B), fontSize = 11.sp)
                                 }
                                 Text(
                                     "${aq.indiceAqi}",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = Color(0xFF64748B),
                                     fontSize = 11.sp,
                                 )
                             } else {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 15.sp)
-                                    Text(ville.regionNom, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+                                    Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 15.sp, color = Color(0xFF1E293B))
+                                    Text(ville.regionNom, color = Color(0xFF64748B), fontSize = 12.sp)
                                 }
                             }
                         }

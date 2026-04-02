@@ -122,6 +122,14 @@ class ApiClient(private val tokenStorage: TokenStorage) {
         }.body()
     }
 
+    suspend fun getPredictionTomorrow(villeNom: String): Result<TomorrowPrediction> = authRequest {
+        client.get("$BASE_URL/predictions/tomorrow/?ville_nom=$villeNom") { withAuth() }.body()
+    }
+
+    suspend fun getPredictionWeek(villeNom: String): Result<WeekPrediction> = authRequest {
+        client.get("$BASE_URL/predictions/week/?ville_nom=$villeNom") { withAuth() }.body()
+    }
+
     // --- Chat ---
 
     suspend fun chat(message: String): Result<ChatResponse> = authRequest {

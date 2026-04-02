@@ -10,6 +10,7 @@ import com.mlmasters.airguard.ui.screens.cities.CitiesViewModel
 import com.mlmasters.airguard.ui.screens.cities.CityDetailViewModel
 import com.mlmasters.airguard.ui.screens.alerts.AlertsViewModel
 import com.mlmasters.airguard.ui.screens.chat.ChatViewModel
+import com.mlmasters.airguard.ui.screens.profile.ProfileViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -25,4 +26,5 @@ val appModule = module {
     viewModelOf(::CityDetailViewModel)
     viewModelOf(::AlertsViewModel)
     viewModelOf(::ChatViewModel)
+    viewModelOf(::ProfileViewModel)
 }

@@ -60,34 +60,34 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(alert.villeNom, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                                Text(alert.villeNom, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, color = Color(0xFF1E293B))
                                 SeverityBadge(alert.niveauSeverite)
                             }
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 alert.villeRegion,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = Color(0xFF64748B),
                                 fontSize = 12.sp,
                             )
                             Spacer(Modifier.height(8.dp))
-                            Text(alert.messageFr, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurface)
+                            Text(alert.messageFr, fontSize = 13.sp, color = Color(0xFF1E293B))
 
                             if (alert.recommandationsResidentsFr.isNotBlank()) {
                                 Spacer(Modifier.height(10.dp))
-                                Text("Recommandations", fontWeight = FontWeight.Medium, fontSize = 13.sp)
+                                Text("Recommandations", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFF1E293B))
                                 Text(
                                     alert.recommandationsResidentsFr,
                                     fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = Color(0xFF64748B),
                                 )
                             }
 
                             if (alert.dureeEstimee.isNotBlank()) {
                                 Spacer(Modifier.height(8.dp))
                                 Text(
-                                    "Durée estimée : ${alert.dureeEstimee}",
+                                    "Duree estimee : ${alert.dureeEstimee}",
                                     fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = Color(0xFF64748B),
                                 )
                             }
                         }

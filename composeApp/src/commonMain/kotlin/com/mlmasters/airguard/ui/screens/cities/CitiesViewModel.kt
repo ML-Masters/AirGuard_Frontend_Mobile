@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mlmasters.airguard.data.model.AirQuality
 import com.mlmasters.airguard.data.model.PredictionResult
 import com.mlmasters.airguard.data.model.Ville
+import com.mlmasters.airguard.data.model.WeekPrediction
 import com.mlmasters.airguard.data.repository.AirGuardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -71,6 +72,7 @@ data class CityDetailState(
     val error: String? = null,
     val prediction: PredictionResult? = null,
     val latestAqi: AirQuality? = null,
+    val weekPrediction: WeekPrediction? = null,
 )
 
 class CityDetailViewModel(private val repository: AirGuardRepository) : ViewModel() {
@@ -83,6 +85,7 @@ class CityDetailViewModel(private val repository: AirGuardRepository) : ViewMode
 
             val predResult = repository.predict(villeNom)
             val aqResult = repository.getAirQuality(estPrediction = false)
+            val weekResult = repository.getPredictionWeek(villeNom)
 
             val latestAqi = aqResult.getOrDefault(emptyList())
                 .filter { it.ville == villeId }
@@ -92,6 +95,7 @@ class CityDetailViewModel(private val repository: AirGuardRepository) : ViewMode
                 isLoading = false,
                 prediction = predResult.getOrNull(),
                 latestAqi = latestAqi,
+                weekPrediction = weekResult.getOrNull(),
                 error = if (predResult.isFailure) predResult.exceptionOrNull()?.message else null,
             )
         }

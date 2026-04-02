@@ -159,3 +159,48 @@ data class PaginatedResponse<T>(
     val previous: String? = null,
     val results: List<T>,
 )
+
+@Serializable
+data class TomorrowPrediction(
+    val ville: String = "",
+    val date: String = "",
+    val aqi: Int = 0,
+    val pm25: Double = 0.0,
+    val categorie: String = "",
+    val label: String = "",
+    val conseil: String = "",
+    val chaleur: ChaleurPrediction = ChaleurPrediction(),
+    val risques: RisquesPrediction = RisquesPrediction(),
+)
+
+@Serializable
+data class ChaleurPrediction(
+    @SerialName("heat_index") val heatIndex: Double = 0.0,
+    val extreme: Double = 0.0,
+    val avertissement: String = "Normal",
+)
+
+@Serializable
+data class RisquesPrediction(
+    val inondation: Double = 0.0,
+    val secheresse: Double = 0.0,
+    @SerialName("categorie_inondation") val categorieInondation: String = "",
+)
+
+@Serializable
+data class WeekPrediction(
+    val ville: String = "",
+    val semaine: String = "",
+    val resume: String = "",
+    val jours: List<DayPrediction> = emptyList(),
+)
+
+@Serializable
+data class DayPrediction(
+    val jour: String = "",
+    val date: String = "",
+    val aqi: Int = 0,
+    val categorie: String = "",
+    val label: String = "",
+    val conseil: String = "",
+)

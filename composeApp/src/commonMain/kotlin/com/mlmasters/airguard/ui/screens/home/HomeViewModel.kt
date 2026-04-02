@@ -27,6 +27,13 @@ class HomeViewModel(private val repository: AirGuardRepository) : ViewModel() {
 
     init {
         loadData()
+        // Auto-refresh every 30 seconds
+        viewModelScope.launch {
+            while (true) {
+                kotlinx.coroutines.delay(30_000)
+                loadData()
+            }
+        }
     }
 
     fun loadData() {

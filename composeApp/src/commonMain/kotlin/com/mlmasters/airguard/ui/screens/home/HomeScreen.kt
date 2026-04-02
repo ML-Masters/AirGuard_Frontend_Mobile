@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -119,7 +120,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                         Text(
                             avgInfo.conseil,
                             fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = Color(0xFF1E293B),
                             modifier = Modifier.padding(12.dp),
                             textAlign = TextAlign.Center,
                         )
@@ -159,6 +160,35 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
             }
         }
 
+        // Tomorrow prediction for top city
+        item {
+            val topCity = latestByCity.entries.maxByOrNull { it.value.indiceAqi }
+            val topVille = topCity?.let { villeMap[it.key] }
+            if (topVille != null && topCity != null) {
+                val info = airQualityInfo(topCity.value.categorie)
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = info.color.copy(alpha = 0.08f)),
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Schedule, contentDescription = null, tint = info.color, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text("Prévision pour demain", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Color(0xFF1E293B))
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            "${topVille.nom} : ${info.label}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = info.color,
+                        )
+                        Text(info.conseil, fontSize = 13.sp, color = Color(0xFF64748B))
+                    }
+                }
+            }
+        }
+
         // Active alerts
         if (state.alerts.isNotEmpty()) {
             item {
@@ -182,12 +212,12 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.weight(1f)) {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(alert.villeNom, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                                Text(alert.villeNom, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = Color(0xFF1E293B))
                                 SeverityBadge(alert.niveauSeverite)
                             }
                             Text(
                                 alert.messageFr.take(120),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = Color(0xFF64748B),
                                 fontSize = 12.sp,
                                 maxLines = 2,
                             )
@@ -236,7 +266,7 @@ private fun CitizenVilleRow(ville: Ville, aq: AirQuality) {
             Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(28.dp))
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = Color(0xFF1E293B))
                 Text(
                     info.label,
                     color = info.color,
@@ -246,7 +276,7 @@ private fun CitizenVilleRow(ville: Ville, aq: AirQuality) {
             }
             Text(
                 "${aq.indiceAqi}",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color(0xFF64748B),
                 fontSize = 11.sp,
             )
         }

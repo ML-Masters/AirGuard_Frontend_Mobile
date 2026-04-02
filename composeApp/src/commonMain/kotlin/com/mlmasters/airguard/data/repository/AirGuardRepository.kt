@@ -40,5 +40,11 @@ class AirGuardRepository(
 
     suspend fun predict(villeNom: String): Result<PredictionResult> = api.predict(villeNom)
 
+    suspend fun getPredictionTomorrow(villeNom: String): Result<TomorrowPrediction> =
+        api.getPredictionTomorrow(villeNom)
+
+    suspend fun getPredictionWeek(villeNom: String): Result<WeekPrediction> =
+        api.getPredictionWeek(villeNom)
+
     suspend fun chat(message: String): Result<ChatResponse> = api.chat(message)
 }
