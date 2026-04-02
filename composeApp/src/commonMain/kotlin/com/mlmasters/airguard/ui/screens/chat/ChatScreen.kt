@@ -107,7 +107,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
             }
         }
 
-        // Input - stays above keyboard
+        // Input
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp,
@@ -115,7 +115,6 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .navigationBarsPadding()
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {

@@ -145,13 +145,16 @@ class ApiClient(private val tokenStorage: TokenStorage) {
         client.get("$BASE_URL/users/me/") { withAuth() }.body()
     }
 
-    suspend fun updateUserProfile(firstName: String, lastName: String, villesFavorites: List<Int>? = null): Result<UserProfile> = authRequest {
+    suspend fun updateUserProfile(firstName: String, lastName: String, villesFavorites: List<Int>? = null, languePreferee: String? = null): Result<UserProfile> = authRequest {
         val body = mutableMapOf<String, Any>(
             "first_name" to firstName,
             "last_name" to lastName,
         )
         if (villesFavorites != null) {
             body["villes_favorites"] = villesFavorites
+        }
+        if (languePreferee != null) {
+            body["langue_preferee"] = languePreferee
         }
         client.patch("$BASE_URL/users/me/") {
             withAuth()

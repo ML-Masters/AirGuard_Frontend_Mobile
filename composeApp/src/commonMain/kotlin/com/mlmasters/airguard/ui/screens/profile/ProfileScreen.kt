@@ -43,9 +43,11 @@ fun ProfileScreen(
     val state by viewModel.state.collectAsState()
     var showEditName by remember { mutableStateOf(false) }
     var showEditCity by remember { mutableStateOf(false) }
+    var showEditLangue by remember { mutableStateOf(false) }
     var editFirstName by remember { mutableStateOf("") }
     var editLastName by remember { mutableStateOf("") }
     var citySearch by remember { mutableStateOf("") }
+    var notificationsEnabled by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -119,18 +121,30 @@ fun ProfileScreen(
 
         // Preferences section
         ProfileSection(title = "Preferences") {
-            ProfileItem(
-                icon = Icons.Default.Notifications,
-                title = "Notifications",
-                subtitle = "Alertes qualite de l'air",
-                onClick = {},
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.Default.Notifications, contentDescription = null, tint = Primary, modifier = Modifier.size(22.dp))
+                Spacer(Modifier.width(14.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Notifications", fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1E293B))
+                    Text("Alertes qualite de l'air", fontSize = 12.sp, color = Color(0xFF64748B))
+                }
+                Switch(
+                    checked = notificationsEnabled,
+                    onCheckedChange = { notificationsEnabled = it },
+                    colors = SwitchDefaults.colors(checkedTrackColor = Primary),
+                )
+            }
             HorizontalDivider(color = Color(0xFFF1F5F9))
             ProfileItem(
                 icon = Icons.Default.Settings,
                 title = "Langue",
                 subtitle = if (state.langue == "fr") "Francais" else "English",
-                onClick = {},
+                onClick = { showEditLangue = true },
             )
         }
 
@@ -250,6 +264,47 @@ fun ProfileScreen(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showEditCity = false }) {
+                    Text("Fermer", color = TextMuted)
+                }
+            },
+        )
+    }
+
+    // Language Dialog
+    if (showEditLangue) {
+        AlertDialog(
+            onDismissRequest = { showEditLangue = false },
+            title = { Text("Choisir la langue", color = TextDark) },
+            text = {
+                Column {
+                    listOf("fr" to "Francais", "en" to "English").forEach { (code, label) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.updateLangue(code)
+                                    showEditLangue = false
+                                }
+                                .padding(vertical = 12.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            RadioButton(
+                                selected = state.langue == code,
+                                onClick = {
+                                    viewModel.updateLangue(code)
+                                    showEditLangue = false
+                                },
+                                colors = RadioButtonDefaults.colors(selectedColor = Primary),
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(label, fontSize = 15.sp, color = Color(0xFF1E293B))
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showEditLangue = false }) {
                     Text("Fermer", color = TextMuted)
                 }
             },

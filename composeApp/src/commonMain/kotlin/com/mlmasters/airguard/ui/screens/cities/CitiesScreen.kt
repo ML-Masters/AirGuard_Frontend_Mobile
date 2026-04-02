@@ -32,7 +32,7 @@ fun CitiesScreen(
         state.isLoading -> LoadingState()
         state.error != null -> ErrorState(state.error ?: "", onRetry = { viewModel.loadData() })
         else -> {
-            val filtered = remember(state.villes, state.searchQuery) { viewModel.filteredVilles() }
+            val filtered = remember(state.villes, state.searchQuery, state.filterCategorie) { viewModel.filteredVilles() }
             LazyColumn(
                 modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                 contentPadding = PaddingValues(16.dp),
@@ -66,6 +66,28 @@ fun CitiesScreen(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(Modifier.height(8.dp))
+
+                    // AQI filter chips
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        val filters = listOf(
+                            "all" to "Tout",
+                            "Bon" to "Bon",
+                            "Modere" to "Acceptable",
+                            "Sensible" to "Degrade",
+                            "Malsain" to "Malsain",
+                        )
+                        filters.forEach { (code, label) ->
+                            FilterChip(
+                                selected = state.filterCategorie == code,
+                                onClick = { viewModel.updateFilter(code) },
+                                label = { Text(label, fontSize = 11.sp) },
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(4.dp))
                 }
 
                 items(filtered, key = { it.id }) { ville ->

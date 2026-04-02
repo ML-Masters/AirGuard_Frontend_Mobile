@@ -17,6 +17,7 @@ data class CitiesState(
     val villes: List<Ville> = emptyList(),
     val latestAqi: Map<Int, AirQuality> = emptyMap(),
     val searchQuery: String = "",
+    val filterCategorie: String = "all",
 )
 
 class CitiesViewModel(private val repository: AirGuardRepository) : ViewModel() {
@@ -57,11 +58,19 @@ class CitiesViewModel(private val repository: AirGuardRepository) : ViewModel() 
         _state.value = _state.value.copy(searchQuery = query)
     }
 
+    fun updateFilter(categorie: String) {
+        _state.value = _state.value.copy(filterCategorie = categorie)
+    }
+
     fun filteredVilles(): List<Ville> {
         val q = _state.value.searchQuery.lowercase()
-        return if (q.isBlank()) _state.value.villes
-        else _state.value.villes.filter {
-            it.nom.lowercase().contains(q) || it.regionNom.lowercase().contains(q)
+        val filter = _state.value.filterCategorie
+        val latestAqi = _state.value.latestAqi
+
+        return _state.value.villes.filter { ville ->
+            val matchesSearch = q.isBlank() || ville.nom.lowercase().contains(q) || ville.regionNom.lowercase().contains(q)
+            val matchesFilter = filter == "all" || latestAqi[ville.id]?.categorie == filter
+            matchesSearch && matchesFilter
         }
     }
 }

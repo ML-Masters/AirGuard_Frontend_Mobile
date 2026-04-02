@@ -70,6 +70,22 @@ class ProfileViewModel(private val repository: AirGuardRepository) : ViewModel()
         }
     }
 
+    fun updateLangue(langue: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isSaving = true)
+            val result = repository.updateUserProfile(
+                _state.value.firstName,
+                _state.value.lastName,
+                languePreferee = langue,
+            )
+            if (result.isSuccess) {
+                _state.value = _state.value.copy(langue = langue, isSaving = false, saveSuccess = true)
+            } else {
+                _state.value = _state.value.copy(isSaving = false, error = result.exceptionOrNull()?.message)
+            }
+        }
+    }
+
     fun updateCity(villeId: Int, villeNom: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isSaving = true, saveSuccess = false)
