@@ -28,12 +28,39 @@ class HomeViewModel(private val repository: AirGuardRepository) : ViewModel() {
 
     init {
         loadData()
-        // Auto-refresh every 30 seconds
+        // Silent auto-refresh every 2 minutes (no loading spinner)
         viewModelScope.launch {
             while (true) {
-                kotlinx.coroutines.delay(30_000)
-                loadData()
+                kotlinx.coroutines.delay(120_000)
+                refreshSilently()
             }
+        }
+    }
+
+    private fun refreshSilently() {
+        viewModelScope.launch {
+            try {
+                val aqResult = repository.getAirQuality(estPrediction = false)
+                val alertsResult = repository.getActiveAlerts()
+                val airQuality = aqResult.getOrDefault(_state.value.airQuality)
+                val alerts = alertsResult.getOrDefault(_state.value.alerts)
+
+                val latestByCity = mutableMapOf<Int, AirQuality>()
+                for (aq in airQuality) {
+                    val existing = latestByCity[aq.ville]
+                    if (existing == null || aq.dateCible > existing.dateCible) {
+                        latestByCity[aq.ville] = aq
+                    }
+                }
+                val cityAQIs = latestByCity.values.toList()
+                val avgAqi = if (cityAQIs.isNotEmpty()) cityAQIs.map { it.indiceAqi }.average().toInt() else 0
+                val criticalCities = cityAQIs.count { it.categorie in listOf("Malsain", "Tres_malsain", "Dangereux") }
+
+                _state.value = _state.value.copy(
+                    airQuality = airQuality, alerts = alerts,
+                    avgAqi = avgAqi, criticalCities = criticalCities,
+                )
+            } catch (_: Exception) { }
         }
     }
 

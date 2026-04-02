@@ -20,11 +20,13 @@ class AlertsViewModel(private val repository: AirGuardRepository) : ViewModel() 
 
     init {
         loadAlerts()
-        // Auto-refresh every 30 seconds
+        // Silent auto-refresh every 2 minutes
         viewModelScope.launch {
             while (true) {
-                kotlinx.coroutines.delay(30_000)
-                loadAlerts()
+                kotlinx.coroutines.delay(120_000)
+                val result = repository.getActiveAlerts()
+                val alerts = result.getOrDefault(_state.value.alerts)
+                _state.value = _state.value.copy(alerts = alerts)
             }
         }
     }
