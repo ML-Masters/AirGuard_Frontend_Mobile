@@ -64,7 +64,11 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
-                    Text("Bonjour", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                    Text(
+                        if (state.userName.isNotEmpty()) "Bonjour ${state.userName}" else "Bonjour",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                    )
                     Text(
                         "Comment est l'air aujourd'hui ?",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,

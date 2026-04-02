@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 data class HomeState(
     val isLoading: Boolean = true,
     val error: String? = null,
+    val userName: String = "",
     val villes: List<Ville> = emptyList(),
     val airQuality: List<AirQuality> = emptyList(),
     val alerts: List<Alert> = emptyList(),
@@ -43,6 +44,8 @@ class HomeViewModel(private val repository: AirGuardRepository) : ViewModel() {
                 val villesResult = repository.getVilles()
                 val aqResult = repository.getAirQuality(estPrediction = false)
                 val alertsResult = repository.getActiveAlerts()
+                val profileResult = repository.getUserProfile()
+                val userName = profileResult.getOrNull()?.firstName ?: ""
 
                 val villes = villesResult.getOrDefault(emptyList())
                 val airQuality = aqResult.getOrDefault(emptyList())
@@ -68,6 +71,7 @@ class HomeViewModel(private val repository: AirGuardRepository) : ViewModel() {
 
                 _state.value = HomeState(
                     isLoading = false,
+                    userName = userName,
                     villes = villes,
                     airQuality = airQuality,
                     alerts = alerts,
