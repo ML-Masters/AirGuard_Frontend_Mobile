@@ -17,15 +17,29 @@ Application mobile multiplateforme de surveillance de la qualite de l'air au Cam
 
 ## Fonctionnalites
 
-- Connexion email/mot de passe + Google Sign-In
-- Inscription avec choix de ville de residence
-- Tableau de bord citoyen (qualite air en langage clair)
-- Liste des 40 villes avec indicateurs sante
-- Detail ville avec predictions ML (3 risques)
-- Alertes actives avec recommandations
-- Chatbot IA integre
-- Profil utilisateur (infos, preferences, deconnexion)
-- Design adapte aux citoyens (pas de jargon technique)
+| Fonctionnalite | Description |
+|----------------|-------------|
+| Connexion | Email/mot de passe + Google Sign-In (Credential Manager) |
+| Inscription | Nom, email, mot de passe, choix de ville de residence |
+| Onboarding | Ecran choix de ville apres Google auth |
+| Dashboard citoyen | Qualite air en langage clair, carte prediction demain |
+| Liste des 40 villes | Recherche, filtre AQI, indicateurs sante |
+| Detail ville | AQI actuel, predictions ML (3 risques), previsions semaine |
+| Alertes | Alertes actives avec recommandations |
+| Chatbot IA | Interface messaging integree |
+| Profil | Edition nom, ville, langue, deconnexion |
+| i18n | Systeme complet (Strings.kt), switch de langue en temps reel |
+| UX citoyen | Labels sante (pas de chiffres AQI bruts), icones Material Design |
+| Auto-refresh | Rafraichissement silencieux toutes les 2 minutes |
+| Securite | Redirection automatique vers login si token expire |
+| Notifications | Push Firebase (Android) |
+
+## Predictions
+
+| Vue | Emplacement |
+|-----|-------------|
+| Demain | Carte sur l'ecran d'accueil |
+| Semaine | Previsions detaillees sur l'ecran detail ville |
 
 ## Ecrans
 
@@ -34,12 +48,12 @@ Application mobile multiplateforme de surveillance de la qualite de l'air au Cam
 | Login | Email/mdp + Google Sign-In |
 | Inscription | Nom, email, ville de residence |
 | Onboarding | Choix de ville apres Google auth |
-| Accueil | KPIs, alertes, villes surveillees |
-| Villes | Liste avec recherche + indicateur sante |
-| Detail ville | AQI, predictions, conseils sante |
+| Accueil | KPIs, alertes, villes surveillees, prediction demain |
+| Villes | Liste 40 villes avec recherche + filtre AQI + indicateur sante |
+| Detail ville | AQI, predictions 3 risques, previsions semaine |
 | Alertes | Alertes actives avec recommandations |
 | Chat | Chatbot IA qualite de l'air |
-| Profil | Infos, preferences, deconnexion |
+| Profil | Edition nom/ville/langue, deconnexion |
 
 ## Build
 

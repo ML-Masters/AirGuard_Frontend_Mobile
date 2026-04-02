@@ -17,11 +17,11 @@ commonMain/ (code partage Android + iOS)
 │       ├── login/       Ecran connexion
 │       ├── register/    Ecran inscription
 │       ├── onboarding/  Choix de ville (Google auth)
-│       ├── home/        Dashboard (KPIs + villes)
-│       ├── cities/      Liste des villes + detail
+│       ├── home/        Dashboard (KPIs + villes + prediction demain)
+│       ├── cities/      Liste des villes + detail + previsions semaine
 │       ├── alerts/      Alertes actives
 │       ├── chat/        Chatbot IA
-│       └── profile/     Profil utilisateur
+│       └── profile/     Profil utilisateur (edition nom/ville/langue)
 └── di/                  Injection de dependances (Koin)
 ```
 
@@ -64,8 +64,8 @@ commonMain/ (code partage Android + iOS)
 ## Phase 3 — Fonctionnalites
 **Statut : Terminee**
 
-- [x] Ecran Liste des villes (40 villes, recherche, filtre, AQI badge)
-- [x] Ecran Detail ville (AQI actuel, predictions ML 3 risques)
+- [x] Ecran Liste des villes (40 villes, recherche, filtre AQI, badge sante)
+- [x] Ecran Detail ville (AQI actuel, predictions ML 3 risques, previsions semaine)
 - [x] Ecran Alertes (alertes actives, severite, recommandations, duree)
 - [x] Ecran Chat IA (interface messaging, envoi/reception, loading indicator)
 - [x] Pagination des alertes (correction du bug de chargement)
@@ -81,12 +81,23 @@ commonMain/ (code partage Android + iOS)
 ## Phase 5 — Polish et finitions
 **Statut : Terminee**
 
-- [x] Ecran Profil utilisateur (infos, preferences, deconnexion)
-- [x] Icones Material Design (remplacement des icones par defaut)
+- [x] Ecran Profil utilisateur (edition nom, ville, langue, deconnexion)
+- [x] Icones Material Design (remplacement des emojis par icones Material)
 - [x] Animations de transition (fade 300ms entre ecrans)
 - [x] Loading states + etats vides + etats erreur (avec retry)
 - [x] Bouton actualiser sur Home, Villes, Alertes
 - [x] Notifications push Firebase (Android)
+
+## Phase 6 — i18n et predictions
+**Statut : Terminee**
+
+- [x] Systeme i18n complet (Strings.kt, toutes les chaines traduites)
+- [x] Switch de langue en temps reel (FR/EN) depuis le profil
+- [x] UX citoyen (labels sante lisibles, pas de chiffres AQI bruts)
+- [x] Prediction demain sur carte accueil
+- [x] Previsions semaine sur ecran detail ville
+- [x] Auto-refresh silencieux (toutes les 2 minutes)
+- [x] Redirection automatique vers login si token expire
 
 ---
 
@@ -97,12 +108,12 @@ commonMain/ (code partage Android + iOS)
 | Login | `POST /login/`, `POST /auth/google/` |
 | Inscription | `POST /register/` |
 | Onboarding | `POST /register/` (completion profil) |
-| Home/Dashboard | `GET /villes/`, `GET /air-quality/`, `GET /national_kpis/`, `GET /alerts/active/` |
+| Home/Dashboard | `GET /villes/`, `GET /air-quality/`, `GET /national_kpis/`, `GET /alerts/active/`, `GET /predictions/tomorrow/` |
 | Liste villes | `GET /villes/`, `GET /air-quality/` |
-| Detail ville | `POST /predict/`, `GET /air-quality/?ville__nom=X` |
+| Detail ville | `POST /predict/`, `GET /air-quality/?ville__nom=X`, `GET /predictions/week/` |
 | Alertes | `GET /alerts/active/` |
 | Chat IA | `POST /chat/` |
-| Profil | `GET /users/me/` |
+| Profil | `GET /users/me/`, `PATCH /users/me/` |
 
 ---
 
