@@ -65,13 +65,13 @@ class ApiClient(private val tokenStorage: TokenStorage) {
         AuthTokens(body.access, body.refresh)
     }
 
-    suspend fun loginWithGoogle(idToken: String): Result<AuthTokens> = runCatching {
+    suspend fun loginWithGoogle(idToken: String): Result<GoogleAuthResponse> = runCatching {
         val response = client.post("$BASE_URL/auth/google/") {
             setBody(GoogleAuthRequest(idToken))
         }
         val body: GoogleAuthResponse = response.body()
         tokenStorage.saveTokens(body.access, body.refresh)
-        AuthTokens(body.access, body.refresh)
+        body
     }
 
     suspend fun refreshToken(): Result<String> = runCatching {
@@ -139,6 +139,26 @@ class ApiClient(private val tokenStorage: TokenStorage) {
         }.body()
     }
 
+    // --- User Profile ---
+
+    suspend fun getUserProfile(): Result<UserProfile> = authRequest {
+        client.get("$BASE_URL/users/me/") { withAuth() }.body()
+    }
+
+    suspend fun updateUserProfile(firstName: String, lastName: String, villesFavorites: List<Int>? = null): Result<UserProfile> = authRequest {
+        val body = mutableMapOf<String, Any>(
+            "first_name" to firstName,
+            "last_name" to lastName,
+        )
+        if (villesFavorites != null) {
+            body["villes_favorites"] = villesFavorites
+        }
+        client.patch("$BASE_URL/users/me/") {
+            withAuth()
+            setBody(body)
+        }.body()
+    }
+
     // --- Helper: auto-retry on 401 ---
 
     private suspend fun <T> authRequest(block: suspend () -> T): Result<T> {
@@ -156,6 +176,7 @@ class ApiClient(private val tokenStorage: TokenStorage) {
                     }
                 } else {
                     tokenStorage.clearTokens()
+                    tokenStorage.authExpired.tryEmit(Unit)
                     Result.failure(Exception("Session expirée"))
                 }
             } else {

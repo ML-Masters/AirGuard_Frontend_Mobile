@@ -69,8 +69,18 @@ fun ProfileScreen(
         }
 
         Spacer(Modifier.height(12.dp))
-        Text("Mon profil", fontWeight = FontWeight.Bold, fontSize = 22.sp, color = TextDark)
-        Text("Gerez vos informations", fontSize = 14.sp, color = TextMuted)
+        if (state.firstName.isNotEmpty() || state.lastName.isNotEmpty()) {
+            Text(
+                "${state.firstName} ${state.lastName}".trim(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                color = Color(0xFF1E293B),
+            )
+            Text(state.email, fontSize = 14.sp, color = Color(0xFF64748B))
+        } else {
+            Text("Mon profil", fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color(0xFF1E293B))
+            Text("Gerez vos informations", fontSize = 14.sp, color = Color(0xFF64748B))
+        }
 
         Spacer(Modifier.height(24.dp))
 
@@ -79,7 +89,7 @@ fun ProfileScreen(
             ProfileItem(
                 icon = Icons.Default.Person,
                 title = "Informations personnelles",
-                subtitle = "Modifier nom et prenom",
+                subtitle = if (state.firstName.isNotEmpty()) "${state.firstName} ${state.lastName}" else "Non renseigne",
                 onClick = {
                     editFirstName = state.firstName
                     editLastName = state.lastName
@@ -90,7 +100,7 @@ fun ProfileScreen(
             ProfileItem(
                 icon = Icons.Default.Email,
                 title = "Adresse email",
-                subtitle = state.email.ifEmpty { "Non renseignee" },
+                subtitle = state.email.ifEmpty { "Non renseigne" },
                 onClick = {},
             )
             HorizontalDivider(color = Color(0xFFF1F5F9))
@@ -180,7 +190,10 @@ fun ProfileScreen(
             },
             confirmButton = {
                 Button(
-                    onClick = { showEditName = false },
+                    onClick = {
+                        viewModel.updateName(editFirstName, editLastName)
+                        showEditName = false
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 ) {
                     Text("Enregistrer")
@@ -219,7 +232,10 @@ fun ProfileScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { showEditCity = false }
+                                    .clickable {
+                                        viewModel.updateCity(ville.id, ville.nom)
+                                        showEditCity = false
+                                    }
                                     .padding(horizontal = 4.dp, vertical = 10.dp),
                             ) {
                                 Column {

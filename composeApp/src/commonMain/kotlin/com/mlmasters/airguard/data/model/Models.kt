@@ -149,6 +149,7 @@ data class GoogleAuthResponse(
     val access: String,
     val refresh: String,
     val created: Boolean = false,
+    @SerialName("has_city") val hasCity: Boolean = false,
 )
 
 // Paginated response wrapper (DRF pagination)
@@ -203,4 +204,15 @@ data class DayPrediction(
     val categorie: String = "",
     val label: String = "",
     val conseil: String = "",
+)
+
+@Serializable
+data class UserProfile(
+    val id: Int = 0,
+    val email: String = "",
+    @SerialName("first_name") val firstName: String = "",
+    @SerialName("last_name") val lastName: String = "",
+    val role: String = "citoyen",
+    @SerialName("langue_preferee") val languePreferee: String = "fr",
+    @SerialName("villes_favorites") val villesFavorites: List<String> = emptyList(),
 )

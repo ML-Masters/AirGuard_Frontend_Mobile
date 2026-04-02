@@ -24,7 +24,7 @@ class AirGuardRepository(
         RegisterRequest(email, password, firstName, lastName, langue, villesFavorites)
     )
 
-    suspend fun loginWithGoogle(idToken: String): Result<AuthTokens> =
+    suspend fun loginWithGoogle(idToken: String): Result<GoogleAuthResponse> =
         api.loginWithGoogle(idToken)
 
     suspend fun logout() = api.logout()
@@ -47,4 +47,13 @@ class AirGuardRepository(
         api.getPredictionWeek(villeNom)
 
     suspend fun chat(message: String): Result<ChatResponse> = api.chat(message)
+
+    suspend fun getUserProfile(): Result<UserProfile> = api.getUserProfile()
+
+    suspend fun updateUserProfile(firstName: String, lastName: String, villesFavorites: List<Int>? = null): Result<UserProfile> =
+        api.updateUserProfile(firstName, lastName, villesFavorites)
+
+    suspend fun getStoredUserInfo(): Triple<String, String, String> {
+        return Triple(tokenStorage.getUserEmail(), tokenStorage.getUserFirstName(), tokenStorage.getUserLastName())
+    }
 }

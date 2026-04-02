@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -227,58 +226,5 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
             }
         }
 
-        // Cities air quality
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Icon(Icons.Default.Place, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
-                Text(
-                    "Qualit\u00e9 de l'air par ville",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                )
-            }
-        }
-        val sortedCities = latestByCity.entries
-            .sortedByDescending { it.value.indiceAqi }
-            .take(15)
-
-        items(sortedCities.toList()) { (villeId, aq) ->
-            val ville = villeMap[villeId] ?: return@items
-            CitizenVilleRow(ville, aq)
-        }
-    }
-}
-
-@Composable
-private fun CitizenVilleRow(ville: Ville, aq: AirQuality) {
-    val info = airQualityInfo(aq.categorie)
-    Card(
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(info.icon, contentDescription = null, tint = info.color, modifier = Modifier.size(28.dp))
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(ville.nom, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = Color(0xFF1E293B))
-                Text(
-                    info.label,
-                    color = info.color,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-            Text(
-                "${aq.indiceAqi}",
-                color = Color(0xFF64748B),
-                fontSize = 11.sp,
-            )
-        }
     }
 }

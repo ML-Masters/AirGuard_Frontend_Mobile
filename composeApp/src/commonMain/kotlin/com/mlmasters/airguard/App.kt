@@ -7,12 +7,14 @@ import com.mlmasters.airguard.ui.screens.login.OnboardingCityScreen
 import com.mlmasters.airguard.ui.screens.login.RegisterScreen
 import com.mlmasters.airguard.ui.theme.AirGuardTheme
 import com.mlmasters.airguard.data.repository.AirGuardRepository
+import com.mlmasters.airguard.data.remote.TokenStorage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
 fun App(onGoogleSignIn: (onToken: (String) -> Unit, onError: (String) -> Unit) -> Unit = { _, _ -> }) {
     val repository: AirGuardRepository = koinInject()
+    val tokenStorage: TokenStorage = koinInject()
     var isLoggedIn by remember { mutableStateOf<Boolean?>(null) }
     var showRegister by remember { mutableStateOf(false) }
     var showOnboarding by remember { mutableStateOf(false) }
@@ -23,6 +25,14 @@ fun App(onGoogleSignIn: (onToken: (String) -> Unit, onError: (String) -> Unit) -
         isLoggedIn = repository.isLoggedIn()
     }
 
+    LaunchedEffect(Unit) {
+        tokenStorage.authExpired.collect {
+            isLoggedIn = false
+            showOnboarding = false
+            showRegister = false
+        }
+    }
+
     val googleSignInHandler: () -> Unit = {
         googleError = null
         onGoogleSignIn(
@@ -30,7 +40,14 @@ fun App(onGoogleSignIn: (onToken: (String) -> Unit, onError: (String) -> Unit) -
                 scope.launch {
                     val result = repository.loginWithGoogle(idToken)
                     if (result.isSuccess) {
-                        showOnboarding = true
+                        val response = result.getOrThrow()
+                        if (response.hasCity) {
+                            // Existing user with city -> go to home
+                            isLoggedIn = true
+                        } else {
+                            // New user or no city -> show onboarding
+                            showOnboarding = true
+                        }
                     } else {
                         googleError = result.exceptionOrNull()?.message ?: "Erreur de connexion Google"
                     }
