@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.mlmasters.airguard.data.model.WeekPrediction
 import com.mlmasters.airguard.ui.components.*
 import com.mlmasters.airguard.ui.components.airQualityInfo
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.*
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -101,41 +102,41 @@ fun CityDetailScreen(
                     // Predictions
                     val pred = state.prediction?.predictions
                     if (pred != null) {
-                        Text("Pr\u00e9visions pour demain", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(S.tomorrowPredictions, fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
                         // Air quality prediction
                         PredictionCard(
-                            title = "Pr\u00e9vision air",
+                            title = S.airQualityPred,
                             icon = Icons.Default.FavoriteBorder,
                             color = aqiColor(pred.qualiteAir.categorie),
                             items = listOf(
-                                "Pollution pr\u00e9vue" to "${pred.qualiteAir.pm25} \u00b5g/m\u00b3",
-                                "Indice pr\u00e9vu" to "${pred.qualiteAir.aqiEstime}",
-                                "Cat\u00e9gorie" to pred.qualiteAir.categorie,
+                                S.pollutionForecast to "${pred.qualiteAir.pm25} \u00b5g/m\u00b3",
+                                S.estimatedAqi to "${pred.qualiteAir.aqiEstime}",
+                                S.category to pred.qualiteAir.categorie,
                             ),
                         )
 
                         // Heat prediction
                         PredictionCard(
-                            title = "Temp\u00e9rature ressentie",
+                            title = S.heatHealth,
                             icon = Icons.Default.Warning,
                             color = if (pred.chaleurSante.avertissement == "Danger") AqiMalsain else Primary,
                             items = listOf(
-                                "Ressenti" to "${pred.chaleurSante.heatIndex}\u00b0C",
-                                "Risque chaleur" to "${pred.chaleurSante.chaleurExtreme}/10",
-                                "Avertissement" to pred.chaleurSante.avertissement,
+                                S.feelsLike to "${pred.chaleurSante.heatIndex}\u00b0C",
+                                S.heatRisk to "${pred.chaleurSante.chaleurExtreme}/10",
+                                S.warning to pred.chaleurSante.avertissement,
                             ),
                         )
 
                         // Flood risk prediction
                         PredictionCard(
-                            title = "Risques m\u00e9t\u00e9o",
+                            title = S.naturalRisks,
                             icon = Icons.Default.Info,
                             color = if (pred.risquesNaturels.risqueInondation > 6) AqiMalsain else Primary,
                             items = listOf(
-                                "S\u00e9cheresse" to "${pred.risquesNaturels.stressHydrique}",
-                                "Inondation" to "${pred.risquesNaturels.risqueInondation}/10",
-                                "Cat\u00e9gorie" to pred.risquesNaturels.categorieInondation,
+                                S.drought to "${pred.risquesNaturels.stressHydrique}",
+                                S.floodRisk to "${pred.risquesNaturels.risqueInondation}/10",
+                                S.category to pred.risquesNaturels.categorieInondation,
                             ),
                         )
                     }
@@ -143,7 +144,7 @@ fun CityDetailScreen(
                     // Week predictions
                     val weekPred = state.weekPrediction
                     if (weekPred != null && weekPred.jours.isNotEmpty()) {
-                        Text("Prévisions de la semaine", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1E293B))
+                        Text(S.weekForecast, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1E293B))
                         Text(weekPred.resume, fontSize = 13.sp, color = Color(0xFF64748B))
                         Spacer(Modifier.height(4.dp))
 

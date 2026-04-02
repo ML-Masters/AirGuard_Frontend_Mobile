@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mlmasters.airguard.ui.components.*
 import com.mlmasters.airguard.ui.components.airQualityInfo
+import com.mlmasters.airguard.ui.i18n.S
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -45,9 +46,9 @@ fun CitiesScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column {
-                            Text("Villes", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                            Text(S.cities, fontWeight = FontWeight.Bold, fontSize = 22.sp)
                             Text(
-                                "${state.villes.size} villes surveill\u00e9es",
+                                "${state.villes.size} ${S.monitoredCities}",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp,
                             )
@@ -60,7 +61,7 @@ fun CitiesScreen(
                     OutlinedTextField(
                         value = state.searchQuery,
                         onValueChange = { viewModel.updateSearch(it) },
-                        placeholder = { Text("Rechercher une ville...") },
+                        placeholder = { Text(S.searchCity) },
                         singleLine = true,
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -73,11 +74,11 @@ fun CitiesScreen(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
                         val filters = listOf(
-                            "all" to "Tout",
-                            "Bon" to "Bon",
-                            "Modere" to "Acceptable",
-                            "Sensible" to "Degrade",
-                            "Malsain" to "Malsain",
+                            "all" to S.all,
+                            "Bon" to S.good,
+                            "Modere" to S.acceptable,
+                            "Sensible" to S.degraded,
+                            "Malsain" to S.unhealthy,
                         )
                         filters.forEach { (code, label) ->
                             FilterChip(

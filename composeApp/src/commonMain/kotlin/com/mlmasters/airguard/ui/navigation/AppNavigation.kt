@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.screens.home.HomeScreen
 import com.mlmasters.airguard.ui.screens.cities.CitiesScreen
 import com.mlmasters.airguard.ui.screens.cities.CityDetailScreen
@@ -38,17 +39,17 @@ import kotlinx.serialization.Serializable
 @Serializable object ProfileRoute
 
 data class BottomNavItem(
-    val label: String,
+    val label: () -> String,
     val icon: ImageVector,
     val route: Any,
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem("Accueil", Icons.Default.Home, HomeRoute),
-    BottomNavItem("Villes", Icons.Default.Place, CitiesRoute),
-    BottomNavItem("Alertes", Icons.Default.Notifications, AlertsRoute),
-    BottomNavItem("Chat", Icons.Default.MailOutline, ChatRoute),
-    BottomNavItem("Profil", Icons.Default.Person, ProfileRoute),
+    BottomNavItem({ S.navHome }, Icons.Default.Home, HomeRoute),
+    BottomNavItem({ S.navCities }, Icons.Default.Place, CitiesRoute),
+    BottomNavItem({ S.navAlerts }, Icons.Default.Notifications, AlertsRoute),
+    BottomNavItem({ S.navChat }, Icons.Default.MailOutline, ChatRoute),
+    BottomNavItem({ S.navProfile }, Icons.Default.Person, ProfileRoute),
 )
 
 @Composable
@@ -78,8 +79,8 @@ fun AppNavigation(onLogout: () -> Unit = {}) {
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label, style = MaterialTheme.typography.labelSmall) },
+                            icon = { Icon(item.icon, contentDescription = item.label()) },
+                            label = { Text(item.label(), style = MaterialTheme.typography.labelSmall) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = MaterialTheme.colorScheme.primary,
                                 selectedTextColor = MaterialTheme.colorScheme.primary,

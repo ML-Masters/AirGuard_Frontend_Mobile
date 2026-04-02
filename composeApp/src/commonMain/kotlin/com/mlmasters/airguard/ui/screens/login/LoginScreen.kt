@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.Primary
 import com.mlmasters.airguard.ui.theme.PrimaryDark
 import org.koin.compose.viewmodel.koinViewModel
@@ -54,9 +55,9 @@ fun LoginScreen(
         Spacer(Modifier.height(80.dp))
 
         // Brand
-        Text("AirGuard", color = Primary, fontWeight = FontWeight.Bold, fontSize = 32.sp)
+        Text(S.appName, color = Primary, fontWeight = FontWeight.Bold, fontSize = 32.sp)
         Text(
-            "Surveillez l'air que vous respirez",
+            S.loginSubtitle,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
         )
@@ -84,7 +85,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(S.email) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
@@ -96,7 +97,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Mot de passe") },
+            label = { Text(S.password) },
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
@@ -124,7 +125,7 @@ fun LoginScreen(
             if (state.isLoading) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
             } else {
-                Text("Se connecter", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                Text(S.login, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
             }
         }
 
@@ -133,7 +134,7 @@ fun LoginScreen(
         // Divider
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE2E8F0))
-            Text("  ou  ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+            Text("  ${S.or}  ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
             HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE2E8F0))
         }
 
@@ -148,27 +149,27 @@ fun LoginScreen(
         ) {
             Text("G", fontWeight = FontWeight.Bold, fontSize = 20.sp, color = Color(0xFFDB4437))
             Spacer(Modifier.width(10.dp))
-            Text("Continuer avec Google", color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp)
+            Text(S.continueGoogle, color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp)
         }
 
         Spacer(Modifier.weight(1f))
 
         // Register link
         TextButton(onClick = onNavigateToRegister) {
-            Text("Pas de compte ? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-            Text("S'inscrire", color = Primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            Text(S.noAccount, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            Text(S.signUp, color = Primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
         }
 
         Spacer(Modifier.height(12.dp))
 
         // Footer
         Text(
-            "Hackathon IndabaX Cameroun 2026",
+            S.hackathon,
             color = Color(0xFFBBBBBB),
             fontSize = 11.sp,
         )
         Text(
-            "ML Masters",
+            S.team,
             color = Color(0xFFBBBBBB),
             fontWeight = FontWeight.Medium,
             fontSize = 11.sp,

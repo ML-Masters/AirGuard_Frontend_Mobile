@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.aqiColor
 
 data class AirQualityInfo(
@@ -29,55 +30,22 @@ data class AirQualityInfo(
     val color: Color,
 )
 
-fun airQualityInfo(categorie: String): AirQualityInfo = when (categorie) {
-    "Bon" -> AirQualityInfo(
-        icon = Icons.Default.CheckCircle,
-        label = "Air pur",
-        description = "La qualit\u00e9 de l'air est excellente",
-        conseil = "Profitez de vos activit\u00e9s en plein air !",
+fun airQualityInfo(categorie: String): AirQualityInfo {
+    val icon = when (categorie) {
+        "Bon" -> Icons.Default.CheckCircle
+        "Modere", "Modéré" -> Icons.Default.Info
+        "Sensible" -> Icons.Default.Warning
+        "Malsain" -> Icons.Default.Error
+        "Tres_malsain", "Très malsain" -> Icons.Default.Warning
+        "Dangereux" -> Icons.Default.Warning
+        else -> Icons.Default.Info
+    }
+    return AirQualityInfo(
+        icon = icon,
+        label = S.aqiLabel(categorie),
+        description = S.aqiDescription(categorie),
+        conseil = S.aqiAdvice(categorie),
         color = aqiColor(categorie),
-    )
-    "Modere", "Mod\u00e9r\u00e9" -> AirQualityInfo(
-        icon = Icons.Default.Info,
-        label = "Air acceptable",
-        description = "La qualit\u00e9 de l'air est correcte",
-        conseil = "Les personnes sensibles doivent rester vigilantes.",
-        color = aqiColor(categorie),
-    )
-    "Sensible" -> AirQualityInfo(
-        icon = Icons.Default.Warning,
-        label = "Air d\u00e9grad\u00e9",
-        description = "Peut affecter les personnes sensibles",
-        conseil = "Limitez les efforts physiques prolong\u00e9s en ext\u00e9rieur. Enfants et personnes \u00e2g\u00e9es : restez prudents.",
-        color = aqiColor(categorie),
-    )
-    "Malsain" -> AirQualityInfo(
-        icon = Icons.Default.Error,
-        label = "Air malsain",
-        description = "Risque pour la sant\u00e9 de tous",
-        conseil = "\u00c9vitez les activit\u00e9s en ext\u00e9rieur. Fermez les fen\u00eatres. Portez un masque si vous sortez.",
-        color = aqiColor(categorie),
-    )
-    "Tres_malsain", "Tr\u00e8s malsain" -> AirQualityInfo(
-        icon = Icons.Default.Warning,
-        label = "Air tr\u00e8s malsain",
-        description = "Danger pour la sant\u00e9",
-        conseil = "Restez \u00e0 l'int\u00e9rieur. Ne faites aucun effort physique dehors. Prot\u00e9gez les enfants et personnes \u00e2g\u00e9es.",
-        color = aqiColor(categorie),
-    )
-    "Dangereux" -> AirQualityInfo(
-        icon = Icons.Default.Warning,
-        label = "Air dangereux",
-        description = "Urgence sanitaire",
-        conseil = "NE SORTEZ PAS. Fermez portes et fen\u00eatres. Appelez le 119 en cas de difficult\u00e9 respiratoire.",
-        color = aqiColor(categorie),
-    )
-    else -> AirQualityInfo(
-        icon = Icons.Default.Info,
-        label = categorie,
-        description = "",
-        conseil = "",
-        color = Color.Gray,
     )
 }
 

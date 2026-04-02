@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.mlmasters.airguard.data.model.AirQuality
 import com.mlmasters.airguard.data.model.Ville
 import com.mlmasters.airguard.ui.components.*
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.*
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -65,12 +66,12 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
             ) {
                 Column {
                     Text(
-                        if (state.userName.isNotEmpty()) "Bonjour ${state.userName}" else "Bonjour",
+                        S.greeting(state.userName),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
                     )
                     Text(
-                        "Comment est l'air aujourd'hui ?",
+                        S.airToday,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                     )
@@ -130,7 +131,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Indice national moyen : ${state.avgAqi} \u00b7 ${state.villes.size} villes",
+                        S.nationalAvg(state.avgAqi, state.villes.size),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -145,19 +146,19 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 KPICard(
-                    title = "Air dangereux",
+                    title = S.dangerousAir,
                     value = "${state.criticalCities}",
                     accentColor = AqiMalsain,
                     icon = { Icon(Icons.Default.Warning, null, tint = AqiMalsain, modifier = Modifier.size(20.dp)) },
-                    subtitle = "ville${if (state.criticalCities != 1) "s" else ""} \u00e0 risque",
+                    subtitle = S.citiesAtRisk,
                     modifier = Modifier.weight(1f),
                 )
                 KPICard(
-                    title = "Alertes",
+                    title = S.alerts,
                     value = "${state.alerts.size}",
                     accentColor = Color(0xFFF59E0B),
                     icon = { Icon(Icons.Default.Notifications, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(20.dp)) },
-                    subtitle = "en cours",
+                    subtitle = S.ongoing,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -177,7 +178,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Schedule, contentDescription = null, tint = info.color, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Prévision pour demain", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Color(0xFF1E293B))
+                            Text(S.tomorrowForecast, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Color(0xFF1E293B))
                         }
                         Spacer(Modifier.height(8.dp))
                         Text(
@@ -201,7 +202,7 @@ private fun HomeContent(state: HomeState, viewModel: HomeViewModel) {
                 ) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = AqiMalsain, modifier = Modifier.size(18.dp))
                     Text(
-                        "Alertes en cours",
+                        S.activeAlerts,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                     )

@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.Primary
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -64,9 +65,9 @@ fun RegisterScreen(
         Spacer(Modifier.height(60.dp))
 
         // Brand
-        Text("AirGuard", color = Primary, fontWeight = FontWeight.Bold, fontSize = 32.sp)
+        Text(S.appName, color = Primary, fontWeight = FontWeight.Bold, fontSize = 32.sp)
         Text(
-            "Créez votre compte",
+            S.createAccount,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
         )
@@ -95,7 +96,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = firstName,
                 onValueChange = { firstName = it },
-                label = { Text("Prénom") },
+                label = { Text(S.firstName) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.weight(1f),
@@ -103,7 +104,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { lastName = it },
-                label = { Text("Nom") },
+                label = { Text(S.lastName) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.weight(1f),
@@ -115,7 +116,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(S.email) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
@@ -127,7 +128,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Mot de passe (6 car. min.)") },
+            label = { Text(S.passwordMin) },
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
@@ -153,7 +154,7 @@ fun RegisterScreen(
             Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(
-                selectedVilleName ?: "Votre ville de résidence",
+                selectedVilleName ?: S.yourCity,
                 color = if (selectedVille != null) MaterialTheme.colorScheme.onSurface
                 else MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
@@ -165,7 +166,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = villeSearch,
                 onValueChange = { villeSearch = it },
-                placeholder = { Text("Rechercher...") },
+                placeholder = { Text(S.search) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -231,7 +232,7 @@ fun RegisterScreen(
             if (state.isLoading) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
             } else {
-                Text("S'inscrire", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                Text(S.signUp, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
             }
         }
 
@@ -240,7 +241,7 @@ fun RegisterScreen(
         // Divider
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE2E8F0))
-            Text("  ou  ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+            Text("  ${S.or}  ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
             HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE2E8F0))
         }
 
@@ -255,22 +256,22 @@ fun RegisterScreen(
         ) {
             Text("G", fontWeight = FontWeight.Bold, fontSize = 20.sp, color = Color(0xFFDB4437))
             Spacer(Modifier.width(10.dp))
-            Text("S'inscrire avec Google", color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp)
+            Text(S.signUpGoogle, color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp)
         }
 
         Spacer(Modifier.height(16.dp))
 
         // Login link
         TextButton(onClick = onBackToLogin) {
-            Text("Déjà un compte ? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-            Text("Se connecter", color = Primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            Text(S.alreadyAccount, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            Text(S.signIn, color = Primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
         }
 
         Spacer(Modifier.height(12.dp))
 
         // Footer
-        Text("Hackathon IndabaX Cameroun 2026", color = Color(0xFFBBBBBB), fontSize = 11.sp)
-        Text("ML Masters", color = Color(0xFFBBBBBB), fontWeight = FontWeight.Medium, fontSize = 11.sp)
+        Text(S.hackathon, color = Color(0xFFBBBBBB), fontSize = 11.sp)
+        Text(S.team, color = Color(0xFFBBBBBB), fontWeight = FontWeight.Medium, fontSize = 11.sp)
 
         Spacer(Modifier.height(24.dp))
     }

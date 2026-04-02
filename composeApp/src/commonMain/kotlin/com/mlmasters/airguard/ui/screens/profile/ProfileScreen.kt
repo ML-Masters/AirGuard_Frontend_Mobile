@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.Primary
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -80,18 +81,18 @@ fun ProfileScreen(
             )
             Text(state.email, fontSize = 14.sp, color = Color(0xFF64748B))
         } else {
-            Text("Mon profil", fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color(0xFF1E293B))
-            Text("Gerez vos informations", fontSize = 14.sp, color = Color(0xFF64748B))
+            Text(S.myProfile, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color(0xFF1E293B))
+            Text(S.manageInfo, fontSize = 14.sp, color = Color(0xFF64748B))
         }
 
         Spacer(Modifier.height(24.dp))
 
         // Compte section
-        ProfileSection(title = "Compte") {
+        ProfileSection(title = S.account) {
             ProfileItem(
                 icon = Icons.Default.Person,
-                title = "Informations personnelles",
-                subtitle = if (state.firstName.isNotEmpty()) "${state.firstName} ${state.lastName}" else "Non renseigne",
+                title = S.personalInfo,
+                subtitle = if (state.firstName.isNotEmpty()) "${state.firstName} ${state.lastName}" else S.notSpecified,
                 onClick = {
                     editFirstName = state.firstName
                     editLastName = state.lastName
@@ -101,15 +102,15 @@ fun ProfileScreen(
             HorizontalDivider(color = Color(0xFFF1F5F9))
             ProfileItem(
                 icon = Icons.Default.Email,
-                title = "Adresse email",
-                subtitle = state.email.ifEmpty { "Non renseigne" },
+                title = S.emailAddress,
+                subtitle = state.email.ifEmpty { S.notSpecified },
                 onClick = {},
             )
             HorizontalDivider(color = Color(0xFFF1F5F9))
             ProfileItem(
                 icon = Icons.Default.LocationOn,
-                title = "Ville de residence",
-                subtitle = state.villeNom.ifEmpty { "Non renseignee" },
+                title = S.cityOfResidence,
+                subtitle = state.villeNom.ifEmpty { S.notSpecified },
                 onClick = {
                     citySearch = ""
                     showEditCity = true
@@ -120,7 +121,7 @@ fun ProfileScreen(
         Spacer(Modifier.height(16.dp))
 
         // Preferences section
-        ProfileSection(title = "Preferences") {
+        ProfileSection(title = S.preferences) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -130,8 +131,8 @@ fun ProfileScreen(
                 Icon(Icons.Default.Notifications, contentDescription = null, tint = Primary, modifier = Modifier.size(22.dp))
                 Spacer(Modifier.width(14.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Notifications", fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1E293B))
-                    Text("Alertes qualite de l'air", fontSize = 12.sp, color = Color(0xFF64748B))
+                    Text(S.notifications, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1E293B))
+                    Text(S.airAlerts, fontSize = 12.sp, color = Color(0xFF64748B))
                 }
                 Switch(
                     checked = notificationsEnabled,
@@ -142,8 +143,8 @@ fun ProfileScreen(
             HorizontalDivider(color = Color(0xFFF1F5F9))
             ProfileItem(
                 icon = Icons.Default.Settings,
-                title = "Langue",
-                subtitle = if (state.langue == "fr") "Francais" else "English",
+                title = S.language,
+                subtitle = if (state.langue == "fr") S.french else S.english,
                 onClick = { showEditLangue = true },
             )
         }
@@ -151,10 +152,10 @@ fun ProfileScreen(
         Spacer(Modifier.height(16.dp))
 
         // About section
-        ProfileSection(title = "Autres") {
+        ProfileSection(title = S.other) {
             ProfileItem(
                 icon = Icons.Default.Info,
-                title = "A propos",
+                title = S.about,
                 subtitle = "AirGuard v1.0 -- ML Masters",
                 onClick = {},
             )
@@ -171,7 +172,7 @@ fun ProfileScreen(
         ) {
             Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(20.dp))
             Spacer(Modifier.width(8.dp))
-            Text("Se deconnecter", fontWeight = FontWeight.Medium)
+            Text(S.logout, fontWeight = FontWeight.Medium)
         }
 
         Spacer(Modifier.height(24.dp))
@@ -181,13 +182,13 @@ fun ProfileScreen(
     if (showEditName) {
         AlertDialog(
             onDismissRequest = { showEditName = false },
-            title = { Text("Modifier le nom", color = TextDark) },
+            title = { Text(S.editName, color = TextDark) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     OutlinedTextField(
                         value = editFirstName,
                         onValueChange = { editFirstName = it },
-                        label = { Text("Prenom") },
+                        label = { Text(S.firstName) },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -195,7 +196,7 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = editLastName,
                         onValueChange = { editLastName = it },
-                        label = { Text("Nom") },
+                        label = { Text(S.lastName) },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -210,12 +211,12 @@ fun ProfileScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 ) {
-                    Text("Enregistrer")
+                    Text(S.save)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showEditName = false }) {
-                    Text("Annuler", color = TextMuted)
+                    Text(S.cancel, color = TextMuted)
                 }
             },
         )
@@ -225,13 +226,13 @@ fun ProfileScreen(
     if (showEditCity) {
         AlertDialog(
             onDismissRequest = { showEditCity = false },
-            title = { Text("Changer de ville", color = TextDark) },
+            title = { Text(S.changeCity, color = TextDark) },
             text = {
                 Column(modifier = Modifier.heightIn(max = 350.dp)) {
                     OutlinedTextField(
                         value = citySearch,
                         onValueChange = { citySearch = it },
-                        placeholder = { Text("Rechercher...") },
+                        placeholder = { Text(S.search) },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -264,7 +265,7 @@ fun ProfileScreen(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showEditCity = false }) {
-                    Text("Fermer", color = TextMuted)
+                    Text(S.close, color = TextMuted)
                 }
             },
         )
@@ -274,10 +275,10 @@ fun ProfileScreen(
     if (showEditLangue) {
         AlertDialog(
             onDismissRequest = { showEditLangue = false },
-            title = { Text("Choisir la langue", color = TextDark) },
+            title = { Text(S.changeLanguage, color = TextDark) },
             text = {
                 Column {
-                    listOf("fr" to "Francais", "en" to "English").forEach { (code, label) ->
+                    listOf("fr" to S.french, "en" to S.english).forEach { (code, label) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -305,7 +306,7 @@ fun ProfileScreen(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showEditLangue = false }) {
-                    Text("Fermer", color = TextMuted)
+                    Text(S.close, color = TextMuted)
                 }
             },
         )

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.Primary
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -44,7 +45,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                "AirGuard Bot",
+                S.chatBot,
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
@@ -121,7 +122,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                 OutlinedTextField(
                     value = input,
                     onValueChange = { input = it },
-                    placeholder = { Text("Posez votre question...", fontSize = 14.sp) },
+                    placeholder = { Text(S.askQuestion, fontSize = 14.sp) },
                     singleLine = true,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.weight(1f),

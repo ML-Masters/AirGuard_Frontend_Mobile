@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mlmasters.airguard.ui.components.*
+import com.mlmasters.airguard.ui.i18n.S
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -25,7 +26,7 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
     when {
         state.isLoading -> LoadingState()
         state.error != null -> ErrorState(state.error ?: "", onRetry = { viewModel.loadAlerts() })
-        state.alerts.isEmpty() -> EmptyState("Aucune alerte active")
+        state.alerts.isEmpty() -> EmptyState(S.noAlerts)
         else -> {
             LazyColumn(
                 modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
@@ -39,9 +40,9 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column {
-                            Text("Alertes actives", fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                            Text(S.activeAlertsTitle, fontWeight = FontWeight.Bold, fontSize = 22.sp)
                             Text(
-                                "${state.alerts.size} alerte${if (state.alerts.size > 1) "s" else ""}",
+                                S.alertCount(state.alerts.size),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp,
                             )
@@ -74,7 +75,7 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
 
                             if (alert.recommandationsResidentsFr.isNotBlank()) {
                                 Spacer(Modifier.height(10.dp))
-                                Text("Recommandations", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFF1E293B))
+                                Text(S.recommendations, fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFF1E293B))
                                 Text(
                                     alert.recommandationsResidentsFr,
                                     fontSize = 12.sp,
@@ -85,7 +86,7 @@ fun AlertsScreen(viewModel: AlertsViewModel = koinViewModel()) {
                             if (alert.dureeEstimee.isNotBlank()) {
                                 Spacer(Modifier.height(8.dp))
                                 Text(
-                                    "Duree estimee : ${alert.dureeEstimee}",
+                                    "${S.estimatedDuration} : ${alert.dureeEstimee}",
                                     fontSize = 12.sp,
                                     color = Color(0xFF64748B),
                                 )

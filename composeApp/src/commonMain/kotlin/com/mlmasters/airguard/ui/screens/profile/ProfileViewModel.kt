@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlmasters.airguard.data.model.Ville
 import com.mlmasters.airguard.data.repository.AirGuardRepository
+import com.mlmasters.airguard.ui.i18n.AppLanguage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -38,12 +39,15 @@ class ProfileViewModel(private val repository: AirGuardRepository) : ViewModel()
 
             val profile = profileResult.getOrNull()
 
+            val langue = profile?.languePreferee ?: "fr"
+            AppLanguage.current = langue
+
             _state.value = ProfileState(
                 firstName = profile?.firstName ?: "",
                 lastName = profile?.lastName ?: "",
                 email = profile?.email ?: "",
                 villeNom = profile?.villesFavorites?.firstOrNull() ?: "",
-                langue = profile?.languePreferee ?: "fr",
+                langue = langue,
                 villes = villesResult.getOrDefault(emptyList()),
                 isLoading = false,
             )
@@ -79,6 +83,7 @@ class ProfileViewModel(private val repository: AirGuardRepository) : ViewModel()
                 languePreferee = langue,
             )
             if (result.isSuccess) {
+                AppLanguage.current = langue
                 _state.value = _state.value.copy(langue = langue, isSaving = false, saveSuccess = true)
             } else {
                 _state.value = _state.value.copy(isSaving = false, error = result.exceptionOrNull()?.message)

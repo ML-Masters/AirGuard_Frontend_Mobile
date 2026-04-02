@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.mlmasters.airguard.data.model.Ville
 import com.mlmasters.airguard.data.repository.AirGuardRepository
 import com.mlmasters.airguard.ui.components.LoadingState
+import com.mlmasters.airguard.ui.i18n.S
 import com.mlmasters.airguard.ui.theme.Primary
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -66,13 +67,13 @@ fun OnboardingCityScreen(onComplete: () -> Unit) {
         )
         Spacer(Modifier.height(12.dp))
         Text(
-            "Où habitez-vous ?",
+            S.whereDoYouLive,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
         )
         Text(
-            "Choisissez votre ville pour recevoir les alertes et suivre la qualité de l'air chez vous.",
+            S.chooseCityDesc,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
@@ -85,7 +86,7 @@ fun OnboardingCityScreen(onComplete: () -> Unit) {
             OutlinedTextField(
                 value = search,
                 onValueChange = { search = it },
-                placeholder = { Text("Rechercher une ville...") },
+                placeholder = { Text(S.searchCity) },
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -149,7 +150,7 @@ fun OnboardingCityScreen(onComplete: () -> Unit) {
                 if (saving) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
                 } else {
-                    Text("Continuer", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    Text(S.continueBtn, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 }
             }
 
@@ -157,7 +158,7 @@ fun OnboardingCityScreen(onComplete: () -> Unit) {
                 onClick = onComplete,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Passer cette étape", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(S.skipStep, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

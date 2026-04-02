@@ -8,9 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mlmasters.airguard.ui.i18n.S
 
 @Composable
-fun LoadingState(message: String = "Chargement...", modifier: Modifier = Modifier) {
+fun LoadingState(message: String = S.loading, modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -40,7 +41,7 @@ fun ErrorState(
             if (onRetry != null) {
                 Spacer(Modifier.height(12.dp))
                 androidx.compose.material3.TextButton(onClick = onRetry) {
-                    Text("Réessayer")
+                    Text(S.retry)
                 }
             }
         }
