@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.AirGuard" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:statusBarColor">@color/splash_bg</item>
-        <item name="android:navigationBarColor">@color/splash_bg</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:navigationBarColor">#FFFFFF</item>
     </style>
 </resources>
