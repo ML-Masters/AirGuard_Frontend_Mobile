@@ -33,65 +33,26 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            Surface(
-                color = Primary,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    S.chatBot,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(16.dp),
-                )
-            }
-        },
-        bottomBar = {
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 8.dp,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .windowInsetsPadding(WindowInsets.ime)
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    OutlinedTextField(
-                        value = input,
-                        onValueChange = { input = it },
-                        placeholder = { Text(S.askQuestion, fontSize = 14.sp) },
-                        singleLine = true,
-                        shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier.weight(1f),
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Button(
-                        onClick = {
-                            viewModel.sendMessage(input)
-                            input = ""
-                        },
-                        enabled = input.isNotBlank() && !state.isSending,
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Primary),
-                        contentPadding = PaddingValues(14.dp),
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, modifier = Modifier.size(20.dp))
-                    }
-                }
-            }
-        },
-    ) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        // Header
+        Surface(color = Primary, modifier = Modifier.fillMaxWidth()) {
+            Text(
+                S.chatBot,
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(16.dp),
+            )
+        }
+
+        // Messages
         LazyColumn(
             state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
             contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -140,6 +101,37 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                         }
                     }
                 }
+            }
+        }
+
+        // Input
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedTextField(
+                value = input,
+                onValueChange = { input = it },
+                placeholder = { Text(S.askQuestion, fontSize = 14.sp) },
+                singleLine = true,
+                shape = RoundedCornerShape(14.dp),
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    viewModel.sendMessage(input)
+                    input = ""
+                },
+                enabled = input.isNotBlank() && !state.isSending,
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                contentPadding = PaddingValues(14.dp),
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, modifier = Modifier.size(20.dp))
             }
         }
     }
