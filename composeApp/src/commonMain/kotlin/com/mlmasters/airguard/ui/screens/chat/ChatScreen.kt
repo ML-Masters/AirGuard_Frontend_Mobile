@@ -36,8 +36,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .imePadding(),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         // Header
         Surface(
@@ -112,6 +111,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp,
+            modifier = Modifier.imePadding(),
         ) {
             Row(
                 modifier = Modifier
