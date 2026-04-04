@@ -3,6 +3,7 @@ package com.mlmasters.airguard.ui.screens.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlmasters.airguard.data.repository.AirGuardRepository
+import com.mlmasters.airguard.ui.i18n.AppLanguage
 import com.mlmasters.airguard.ui.i18n.S
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,7 @@ class ChatViewModel(private val repository: AirGuardRepository) : ViewModel() {
         )
 
         viewModelScope.launch {
-            val result = repository.chat(text)
+            val result = repository.chat(text, AppLanguage.current)
             val botMsg = if (result.isSuccess) {
                 ChatMessage(result.getOrThrow().response, false)
             } else {

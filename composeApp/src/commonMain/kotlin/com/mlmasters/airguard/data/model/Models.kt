@@ -74,6 +74,7 @@ data class RefreshRequest(
 @Serializable
 data class ChatRequest(
     val message: String,
+    val lang: String = "fr",
 )
 
 @Serializable

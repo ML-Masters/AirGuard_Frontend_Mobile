@@ -46,7 +46,7 @@ class AirGuardRepository(
     suspend fun getPredictionWeek(villeNom: String): Result<WeekPrediction> =
         api.getPredictionWeek(villeNom)
 
-    suspend fun chat(message: String): Result<ChatResponse> = api.chat(message)
+    suspend fun chat(message: String, lang: String = "fr"): Result<ChatResponse> = api.chat(message, lang)
 
     suspend fun getUserProfile(): Result<UserProfile> = api.getUserProfile()
 

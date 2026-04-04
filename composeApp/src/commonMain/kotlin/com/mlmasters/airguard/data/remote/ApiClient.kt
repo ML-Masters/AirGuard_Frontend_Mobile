@@ -132,10 +132,10 @@ class ApiClient(private val tokenStorage: TokenStorage) {
 
     // --- Chat ---
 
-    suspend fun chat(message: String): Result<ChatResponse> = authRequest {
+    suspend fun chat(message: String, lang: String = "fr"): Result<ChatResponse> = authRequest {
         client.post("$BASE_URL/air-quality/chat/") {
             withAuth()
-            setBody(ChatRequest(message))
+            setBody(ChatRequest(message, lang))
         }.body()
     }
 
