@@ -58,9 +58,10 @@ fun AppNavigation(onLogout: () -> Unit = {}) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomBar = currentDestination?.let { dest ->
+    val isOnChat = currentDestination?.hasRoute(ChatRoute::class) == true
+    val showBottomBar = !isOnChat && (currentDestination?.let { dest ->
         bottomNavItems.any { dest.hasRoute(it.route::class) }
-    } ?: true
+    } ?: true)
 
     Scaffold(
         bottomBar = {
