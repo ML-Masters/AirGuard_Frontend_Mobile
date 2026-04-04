@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.mlmasters.airguard.data.remote.GoogleSignInHelper
 import com.mlmasters.airguard.data.remote.createDataStore
@@ -16,7 +15,6 @@ import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         startKoin {
